@@ -25,14 +25,22 @@ const StarIcon = () => (
 
 export default function Home() {
   const [search, setSearch] = useState("");
-  const [locationFilter, setLocationFilter] = useState("");
+  const [locationFilters, setLocationFilters] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState<"rating" | "highestPackage" | "fees" | "">("");
   const [compareList, setCompareList] = useState<string[]>([]);
 
-  let filtered =
-    locationFilter === ""
-      ? colleges.filter((c) => c.name.toLowerCase().includes(search.toLowerCase()))
-      : colleges.filter((c) => c.location === locationFilter && c.name.toLowerCase().includes(search.toLowerCase()));
+  let filtered = colleges.filter((c) => {
+    const s = search.toLowerCase().trim();
+    const matchesSearch =
+      s === "" ||
+      c.name.toLowerCase().includes(s) ||
+      c.location.toLowerCase().includes(s) ||
+      c.courses.some((course) => course.toLowerCase().includes(s));
+    
+    const matchesLocation = locationFilters.length === 0 || locationFilters.includes(c.location);
+    
+    return matchesSearch && matchesLocation;
+  });
 
   // Apply sorting
   if (sortBy === "rating") filtered.sort((a, b) => b.rating - a.rating);
@@ -42,6 +50,12 @@ export default function Home() {
   const toggleCompare = (id: string) => {
     setCompareList((prev) =>
       prev.includes(id) ? prev.filter((x) => x !== id) : prev.length < 3 ? [...prev, id] : prev
+    );
+  };
+
+  const toggleLocation = (loc: string) => {
+    setLocationFilters((prev) =>
+      prev.includes(loc) ? prev.filter((l) => l !== loc) : [...prev, loc]
     );
   };
 
@@ -81,16 +95,16 @@ export default function Home() {
               {locations.map((loc) => (
                 <button
                   key={loc}
-                  onClick={() => setLocationFilter(loc === locationFilter ? "" : loc)}
+                  onClick={() => toggleLocation(loc)}
                   className={`px-6 py-2 font-black uppercase tracking-widest border-2 border-[#111] transition-all
                   ${
-                    locationFilter === loc
+                    locationFilters.includes(loc)
                       ? "bg-[#111] text-[#f4f1ea] shadow-[4px_4px_0px_0px_#111] translate-x-[-2px] translate-y-[-2px]"
                       : "bg-[#f4f1ea] text-[#111] hover:bg-[#111] hover:text-[#f4f1ea] hover:shadow-[4px_4px_0px_0px_#111] hover:translate-x-[-2px] hover:translate-y-[-2px]"
                   }`}
                 >
                   <span className="flex items-center gap-2">
-                    <span className={`w-3 h-3 border-2 border-current rounded-full ${locationFilter === loc ? "bg-current" : ""}`}></span>
+                    <span className={`w-3 h-3 border-2 border-current rounded-full ${locationFilters.includes(loc) ? "bg-current" : ""}`}></span>
                     {loc}
                   </span>
                 </button>
@@ -139,7 +153,7 @@ export default function Home() {
 
       {/* College Grid */}
       <section className="max-w-7xl mx-auto w-full px-6 pb-32">
-        {locationFilter === "" && search === "" ? (
+        {locationFilters.length === 0 && search === "" ? (
           <div className="text-center py-24 text-[#111] border-4 border-[#111] bg-[#f4f1ea] btn-brutal relative overflow-hidden group max-w-4xl mx-auto">
             <div className="absolute inset-0 bg-[linear-gradient(to_right,#11111115_1px,transparent_1px),linear-gradient(to_bottom,#11111115_1px,transparent_1px)] bg-[size:2rem_2rem] opacity-50 group-hover:opacity-100 transition-opacity"></div>
             <div className="relative z-10">
