@@ -139,7 +139,7 @@ export default function Home() {
 
       {/* College Grid */}
       <section className="max-w-7xl mx-auto w-full px-6 pb-32">
-        {locationFilter === "" ? (
+        {locationFilter === "" && search === "" ? (
           <div className="text-center py-24 text-[#111] border-4 border-[#111] bg-[#f4f1ea] btn-brutal relative overflow-hidden group max-w-4xl mx-auto">
             <div className="absolute inset-0 bg-[linear-gradient(to_right,#11111115_1px,transparent_1px),linear-gradient(to_bottom,#11111115_1px,transparent_1px)] bg-[size:2rem_2rem] opacity-50 group-hover:opacity-100 transition-opacity"></div>
             <div className="relative z-10">
@@ -149,8 +149,8 @@ export default function Home() {
                   <circle cx="12" cy="10" r="3"></circle>
                 </svg>
               </div>
-              <p className="text-3xl font-black uppercase tracking-widest mb-2">Awaiting Region</p>
-              <p className="font-serif italic text-xl opacity-80">Select a region from the filters above to unlock the directory.</p>
+              <p className="text-3xl font-black uppercase tracking-widest mb-2">Awaiting Region or Search</p>
+              <p className="font-serif italic text-xl opacity-80">Select a region from the filters or enter a search query to unlock the directory.</p>
             </div>
           </div>
         ) : filtered.length === 0 ? (
