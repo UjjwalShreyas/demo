@@ -45,7 +45,7 @@ export default function RankingsPage() {
       <div className="space-y-6">
         {sortedColleges.map((college, index) => (
           <div key={college.id} className="bg-[#f4f1ea] border-4 border-[#111] p-6 btn-brutal flex flex-col md:flex-row items-center gap-6 group">
-            <div className="text-4xl md:text-6xl font-black text-[#111] w-20 md:w-32 shrink-0 text-center opacity-30 group-hover:opacity-100 transition-opacity">
+            <div className="text-4xl md:text-6xl font-black text-[#111] w-24 md:w-48 shrink-0 text-center opacity-30 group-hover:opacity-100 transition-opacity">
               #{index + 1}
             </div>
             <div className="flex-1 w-full border-l-4 border-[#111] pl-6 py-2">
