@@ -26,13 +26,18 @@ const StarIcon = () => (
 export default function Home() {
   const [search, setSearch] = useState("");
   const [locationFilter, setLocationFilter] = useState("");
+  const [sortBy, setSortBy] = useState<"rating" | "highestPackage" | "fees" | "">("");
   const [compareList, setCompareList] = useState<string[]>([]);
 
-  const filtered = colleges.filter((c) => {
-    const matchSearch = c.name.toLowerCase().includes(search.toLowerCase());
-    const matchLocation = locationFilter ? c.location === locationFilter : true;
-    return matchSearch && matchLocation;
-  });
+  let filtered =
+    locationFilter === ""
+      ? colleges.filter((c) => c.name.toLowerCase().includes(search.toLowerCase()))
+      : colleges.filter((c) => c.location === locationFilter && c.name.toLowerCase().includes(search.toLowerCase()));
+
+  // Apply sorting
+  if (sortBy === "rating") filtered.sort((a, b) => b.rating - a.rating);
+  else if (sortBy === "highestPackage") filtered.sort((a, b) => b.highestPackage - a.highestPackage);
+  else if (sortBy === "fees") filtered.sort((a, b) => a.fees - b.fees);
 
   const toggleCompare = (id: string) => {
     setCompareList((prev) =>
@@ -65,28 +70,48 @@ export default function Home() {
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
+      </section>
 
-        {/* Custom Animated Radio Buttons for Filters */}
-        <div className="flex flex-col items-center w-full max-w-3xl">
-          <p className="text-sm font-bold uppercase tracking-widest mb-4 border-b-2 border-[#111] pb-1">Filter by Region</p>
-          <div className="flex flex-wrap gap-4 justify-center">
-            {locations.map((loc) => (
-              <label key={loc} className="cursor-pointer relative flex items-center group">
-                <input
-                  type="radio"
-                  name="location"
-                  className="peer sr-only"
-                  checked={locationFilter === loc}
-                  onChange={() => setLocationFilter(loc)}
-                />
-                <div className="flex items-center gap-2 px-5 py-2 border-2 border-[#111] bg-[#f4f1ea] text-[#111] font-bold peer-checked:bg-[#111] peer-checked:text-[#f4f1ea] transition-colors duration-300 hover:bg-[#e8e4d9]">
-                  <div className="w-4 h-4 rounded-full border-2 border-current flex items-center justify-center">
-                    <div className={`w-2 h-2 rounded-full bg-current transition-transform duration-300 ${locationFilter === loc ? "scale-100" : "scale-0"}`}></div>
-                  </div>
-                  {loc.toUpperCase()}
-                </div>
-              </label>
-            ))}
+      {/* Filters Section */}
+      <section className="max-w-7xl mx-auto w-full px-6 mb-12">
+        <div className="flex flex-col md:flex-row justify-between items-end gap-6 mb-8 border-b-4 border-[#111] pb-6">
+          <div>
+            <h2 className="text-sm font-black uppercase tracking-widest text-[#111] mb-4">Location Filters</h2>
+            <div className="flex flex-wrap gap-4">
+              {locations.map((loc) => (
+                <button
+                  key={loc}
+                  onClick={() => setLocationFilter(loc === locationFilter ? "" : loc)}
+                  className={`px-6 py-2 font-black uppercase tracking-widest border-2 border-[#111] transition-all
+                  ${
+                    locationFilter === loc
+                      ? "bg-[#111] text-[#f4f1ea] shadow-[4px_4px_0px_0px_#111] translate-x-[-2px] translate-y-[-2px]"
+                      : "bg-[#f4f1ea] text-[#111] hover:bg-[#111] hover:text-[#f4f1ea] hover:shadow-[4px_4px_0px_0px_#111] hover:translate-x-[-2px] hover:translate-y-[-2px]"
+                  }`}
+                >
+                  <span className="flex items-center gap-2">
+                    <span className={`w-3 h-3 border-2 border-current rounded-full ${locationFilter === loc ? "bg-current" : ""}`}></span>
+                    {loc}
+                  </span>
+                </button>
+              ))}
+            </div>
+          </div>
+          
+          {/* Sort By Dropdown */}
+          <div className="w-full md:w-auto">
+             <h2 className="text-sm font-black uppercase tracking-widest text-[#111] mb-4">Sort Results</h2>
+             <select 
+               className="w-full md:w-64 bg-[#f4f1ea] text-[#111] font-bold uppercase tracking-widest border-4 border-[#111] p-3 focus:outline-none focus:shadow-[4px_4px_0px_0px_#111] transition-shadow cursor-pointer appearance-none"
+               value={sortBy}
+               onChange={(e) => setSortBy(e.target.value as any)}
+               style={{ backgroundImage: `url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23111%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22square%22%20stroke-linejoin%3D%22miter%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E")`, backgroundRepeat: "no-repeat", backgroundPosition: "right 10px center" }}
+             >
+               <option value="">Default Sorting</option>
+               <option value="highestPackage">Highest Package</option>
+               <option value="rating">Highest Rating</option>
+               <option value="fees">Lowest Fees</option>
+             </select>
           </div>
         </div>
       </section>

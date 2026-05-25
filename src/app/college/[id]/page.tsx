@@ -32,7 +32,7 @@ export default function CollegePage({ params }: { params: Promise<{ id: string }
 
   if (!college) return notFound();
 
-  const tabs = ["Overview", "Courses", "Placements", "Reviews"];
+  const tabs = ["Overview", "Courses", "Placements", "Compensation", "Reviews"];
 
   return (
     <main className="flex-1 w-full flex flex-col pb-32">
@@ -169,6 +169,57 @@ export default function CollegePage({ params }: { params: Promise<{ id: string }
                 <p className="text-[#f4f1ea]/60 font-bold tracking-widest uppercase mb-4 relative z-10">Overall Highlights</p>
                 <p className="text-4xl md:text-5xl font-black mb-4 relative z-10">{college.placements}</p>
                 <p className="font-serif italic text-xl relative z-10">Latest Recruitment Drive</p>
+              </div>
+            </div>
+          )}
+
+          {activeTab === "Compensation" && (
+            <div className="animate-fade-in">
+              <h2 className="text-3xl font-black uppercase mb-8 text-[#111]">Salary History & Trends</h2>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                {/* Trend Graph */}
+                <div className="bg-[#f4f1ea] border-4 border-[#111] p-8 btn-brutal">
+                  <h3 className="font-black uppercase text-xl mb-6">Historical Growth (3 YRS)</h3>
+                  <div className="flex items-end justify-between h-64 border-b-4 border-l-4 border-[#111] pb-4 pl-4 pt-4 relative">
+                    {college.salaryHistory.map((sh, idx) => {
+                      const maxVal = Math.max(...college.salaryHistory.map(s => s.highest));
+                      const avgHeight = (sh.average / maxVal) * 100;
+                      const topHeight = (sh.highest / maxVal) * 100;
+                      
+                      return (
+                        <div key={sh.year} className="flex flex-col items-center gap-2 flex-1 relative group">
+                          <div className="w-full flex justify-center items-end gap-1 h-full">
+                            <div className="w-1/3 bg-[#111] relative transition-all group-hover:bg-black" style={{ height: `${avgHeight}%` }}>
+                              <span className="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-bold">{sh.average}</span>
+                            </div>
+                            <div className="w-1/3 bg-[#32cd32] relative transition-all" style={{ height: `${topHeight}%` }}>
+                              <span className="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-bold">{sh.highest}</span>
+                            </div>
+                          </div>
+                          <span className="text-xs font-black uppercase mt-2">{sh.year}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  <div className="flex gap-6 mt-6 justify-center">
+                    <div className="flex items-center gap-2 text-xs font-bold uppercase"><div className="w-3 h-3 bg-[#111]"></div> Avg Package</div>
+                    <div className="flex items-center gap-2 text-xs font-bold uppercase"><div className="w-3 h-3 bg-[#32cd32]"></div> Top Package</div>
+                  </div>
+                </div>
+
+                {/* Top Roles */}
+                <div className="bg-[#111] text-[#f4f1ea] border-4 border-[#111] p-8 btn-brutal flex flex-col justify-center">
+                  <h3 className="font-black uppercase text-xl mb-6 border-b-2 border-[#f4f1ea]/20 pb-4">Top Roles & Packages</h3>
+                  <div className="space-y-6">
+                    {college.topRoles.map(role => (
+                      <div key={role.role} className="flex items-center justify-between group">
+                        <span className="text-lg font-bold uppercase tracking-widest opacity-80 group-hover:opacity-100 transition-opacity">{role.role}</span>
+                        <div className="flex-1 border-b-2 border-dashed border-[#f4f1ea]/20 mx-4 relative top-1"></div>
+                        <span className="text-2xl font-black">{role.salary} <span className="text-sm">LPA</span></span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
           )}

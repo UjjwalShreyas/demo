@@ -32,6 +32,14 @@ export function Navbar() {
               >
                 Rankings
               </Link>
+              <Link
+                href="/salaries"
+                className={`text-sm font-bold tracking-wide uppercase text-[#111111] decoration-2 underline-offset-4 hover:underline ${
+                  pathname.startsWith("/salaries") ? "underline" : ""
+                }`}
+              >
+                Salaries
+              </Link>
             </div>
           </div>
         </div>
