@@ -339,27 +339,36 @@ const generateMocks = (count: number): College[] => {
   const rolesList = ["Software Engineer", "Data Analyst", "Consultant", "System Engineer", "Product Manager"];
   
   return Array.from({ length: count }).map((_, i) => {
-    const avgPkg = Math.floor(Math.random() * 15) + 4; // 4 to 19
-    const highPkg = avgPkg * (Math.floor(Math.random() * 3) + 2); // 8 to 57+
-    const rating = Number((Math.random() * 1.5 + 3.5).toFixed(1)); // 3.5 to 5.0
-    const loc = locations[Math.floor(Math.random() * locations.length)];
+    // Deterministic pseudo-random generation to fix Next.js hydration errors
+    const pseudoRandom1 = (i * 13) % 15;
+    const pseudoRandom2 = (i * 7) % 3;
+    const pseudoRandom3 = (i * 17) % locations.length;
+    
+    const avgPkg = pseudoRandom1 + 4; // 4 to 18
+    const highPkg = avgPkg * (pseudoRandom2 + 2); // 8 to 54
+    const rating = Number((((i * 11) % 16) / 10 + 3.5).toFixed(1)); // 3.5 to 5.0
+    const loc = locations[pseudoRandom3];
     
     return {
       id: `mock-${i + 11}`,
       name: `Institute of Technology ${loc} ${i + 1}`,
       location: loc,
-      fees: (Math.floor(Math.random() * 3) + 1) * 100000,
+      fees: ((i % 3) + 1) * 100000,
       rating: rating,
       courses: ["B.Tech CSE", "B.Tech ECE", "MBA"],
       placements: `Avg package: ${avgPkg} LPA | Top: ${highPkg} LPA`,
       highestPackage: highPkg,
       averagePackage: avgPkg,
-      campusSize: Math.floor(Math.random() * 200) + 50,
-      topRecruiters: [companies[Math.floor(Math.random() * 3)], companies[Math.floor(Math.random() * 3) + 3], companies[Math.floor(Math.random() * 3) + 6]],
+      campusSize: ((i * 23) % 200) + 50,
+      topRecruiters: [
+        companies[(i * 3) % companies.length], 
+        companies[(i * 5) % companies.length], 
+        companies[(i * 7) % companies.length]
+      ],
       facilities: { 
-        labs: Math.floor(Math.random() * 4) + 6, 
-        sports: Math.floor(Math.random() * 4) + 6, 
-        library: Math.floor(Math.random() * 4) + 6 
+        labs: (i % 4) + 6, 
+        sports: ((i+1) % 4) + 6, 
+        library: ((i+2) % 4) + 6 
       },
       demographics: { male: 60, female: 35, other: 5 },
       placementSectors: { it: 70, core: 20, finance: 10 },
@@ -369,9 +378,9 @@ const generateMocks = (count: number): College[] => {
         { year: 2023, average: avgPkg, highest: highPkg },
       ],
       topRoles: [
-        { role: rolesList[0], salary: avgPkg + 2 },
-        { role: rolesList[1], salary: avgPkg },
-        { role: rolesList[2], salary: avgPkg - 1 },
+        { role: rolesList[(i * 2) % rolesList.length], salary: avgPkg + 2 },
+        { role: rolesList[(i * 3 + 1) % rolesList.length], salary: avgPkg },
+        { role: rolesList[(i * 4 + 2) % rolesList.length], salary: avgPkg - 1 },
       ],
       reviews: [
         { user: "Student", text: "Decent place to study.", rating: Math.floor(rating) }
