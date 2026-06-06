@@ -1,12 +1,4 @@
-<div align="center">
-  <img src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/nextjs/nextjs.png" width="80" alt="Next.js" />
-  <h1 align="center">SCOUT</h1>
-  <p align="center">
-    <strong>A high-performance, minimalist discovery engine & compensation analytics dashboard.</strong>
-  </p>
-</div>
-
-<br />
+Live Site : https://scoutdemo.vercel.app/
 
 ## 🎯 Project Overview
 
